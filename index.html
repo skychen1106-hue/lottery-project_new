@@ -9,79 +9,87 @@
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #fdf5e6; font-family: "Microsoft JhengHei", sans-serif; display: flex; flex-direction: column; }
         .header { background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%); color: #ffd700; padding: 15px 0; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         h1 { margin: 0; font-size: 22px; }
-        .main-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; }
-        #instructions { width: 100%; max-width: 450px; text-align: left; font-size: 14px; }
-        .info-section { background-color: #fff; border-left: 4px solid #8b0000; padding: 10px 15px; margin-bottom: 12px; border-radius: 5px; }
-        .btn-area { padding: 20px 0; text-align: center; }
-        #drawBtn { font-size: 20px; padding: 12px 60px; background-color: #8b0000; color: #ffd700; border: 2px solid #ffd700; border-radius: 50px; cursor: pointer; font-weight: bold; }
-        #result-image { max-width: 100%; max-height: 75vh; display: none; border: 4px solid #fff; border-radius: 8px; object-fit: contain; }
-        #loading { display: none; color: #8b0000; font-weight: bold; }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; width: 100%; }
+        #instructions { width: 100%; max-width: 450px; text-align: left; font-size: 14px; line-height: 1.5; }
+        .info-section { background-color: #fff; border-left: 4px solid #8b0000; padding: 10px 15px; margin-bottom: 12px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .info-section h2 { font-size: 16px; color: #8b0000; margin: 0 0 8px 0; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        .info-section ul, .info-section ol { padding-left: 20px; margin: 0; }
+        .btn-area { flex-shrink: 0; padding: 20px 0; width: 100%; text-align: center; }
+        #drawBtn { font-size: 20px; padding: 12px 60px; background-color: #8b0000; color: #ffd700; border: 2px solid #ffd700; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s; }
+        #drawBtn:active { transform: scale(0.95); }
+        #result-image { max-width: 100%; max-height: 75vh; display: none; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-radius: 8px; object-fit: contain; }
+        #loading { display: none; color: #8b0000; font-weight: bold; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <div class="header"><h1>✨ 天空紫微 ✨</h1></div>
+
+    <div class="header">
+        <h1>✨ 天空紫微 ✨</h1>
+    </div>
+
     <div class="main-content">
         <div id="instructions">
             <div class="info-section">
                 <h2>📜 抽牌前準備步驟</h2>
                 <ol>
-                    <li><strong>清淨心神：</strong>深呼吸讓思緒平靜。</li>
-                    <li><strong>聚焦問題：</strong>思考具體的問題。</li>
-                    <li><strong>抽牌：</strong>按感覺隨機點擊。</li>
+                    <li><strong>清淨心神 (靜心/冥想)：</strong>深呼吸讓思緒平靜，排除雜念。</li>
+                    <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題。</li>
+                    <li><strong>抽牌：</strong>在專注狀態下，按感覺隨機抽出牌卡。</li>
                 </ol>
             </div>
             <div class="info-section">
-                <h2>⚠️ 抽牌禁忌</h2>
+                <h2>⚠️ 抽牌禁忌與注意事項</h2>
                 <ul>
-                    <li>一事不二問、不可問惡事、問近不問遠。</li>
+                    <li>環境清淨、一事不二問、不可問惡事、問近不問遠、真心誠意。</li>
                 </ul>
             </div>
         </div>
+
         <p id="loading">正在請示神明...</p>
         <img id="result-image" src="">
     </div>
-    <div class="btn-area"><button id="drawBtn">誠心求籤</button></div>
+
+    <div class="btn-area">
+        <button id="drawBtn">誠心求籤</button>
+    </div>
 
     <script>
-        // 🚨 請把下面的檔名換成你 GitHub 上的真實檔名 (包含副檔名)
-        const images = [
-            "IMG_123.jpg", 
-            "籤詩_01.png",
-            "S__123456.jpg"
-            // ... 這裡請填入你所有的檔名
+        const drawBtn = document.getElementById('drawBtn');
+        const img = document.getElementById('result-image');
+        const loading = document.getElementById('loading');
+        const instructions = document.getElementById('instructions');
+
+        // 定義你的檔名清單 (請根據你實際有的檔名補齊)
+        const imageList = [
+            "1.jpg", "2.jpg", "3.jpg", "1複製.jpg", "2複製.jpg"
+            // 如果還有其他的，請手動加在下面，例如 "3複製.jpg", "4.jpg"
         ];
 
-        document.getElementById('drawBtn').onclick = function() {
-            if (images.length === 0 || images[0] === "IMG_123.jpg") {
-                alert("請先在程式碼中填入正確的圖片檔名清單！");
-                return;
-            }
-            const btn = this;
-            const img = document.getElementById('result-image');
-            const instructions = document.getElementById('instructions');
-            const loading = document.getElementById('loading');
-
-            btn.disabled = true;
+        drawBtn.onclick = function() {
+            drawBtn.disabled = true;
             loading.style.display = 'block';
-
-            const randomFile = images[Math.floor(Math.random() * images.length)];
-            // 注意路徑：GitHub Pages 需要加上資料夾路徑
-            const imagePath = "static/images/" + randomFile;
+            
+            // 隨機選取一個檔名
+            const randomIndex = Math.floor(Math.random() * imageList.length);
+            const fileName = imageList[randomIndex];
+            const imagePath = "static/images/" + fileName;
 
             const tempImg = new Image();
             tempImg.src = imagePath;
+
             tempImg.onload = function() {
                 instructions.style.display = 'none';
                 loading.style.display = 'none';
                 img.src = imagePath;
                 img.style.display = 'block';
-                btn.disabled = false;
-                btn.innerText = '再次求籤';
+                drawBtn.disabled = false;
+                drawBtn.innerText = '再次求籤';
             };
+
             tempImg.onerror = function() {
-                alert("讀不到圖片：" + imagePath + "\n請確認檔名與大小寫是否一致！");
-                btn.disabled = false;
+                alert("讀取失敗，請確認圖片是否存在於 static/images/ 且檔名正確：" + fileName);
                 loading.style.display = 'none';
+                drawBtn.disabled = false;
             };
         };
     </script>
