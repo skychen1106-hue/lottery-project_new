@@ -56,4 +56,115 @@
         }
         .info-section h2 { font-size: 16px; color: #8b0000; margin: 0 0 8px 0; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .info-section ul, .info-section ol { padding-left: 20px; margin: 0; font-size: 14px; line-height: 1.6; color: #333; }
-        .info-section li { margin-
+        .info-section li { margin-bottom: 6px; }
+
+        .btn-area { 
+            padding: 20px 0 30px 0; 
+            text-align: center; 
+            flex-shrink: 0;
+            width: 100%;
+        }
+        #drawBtn { 
+            font-size: 20px; 
+            padding: 12px 60px; 
+            background-color: #8b0000; 
+            color: #ffd700; 
+            border: 2px solid #ffd700; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #result-image { 
+            max-width: 100%; 
+            max-height: 70vh; 
+            display: none; 
+            border: 5px solid #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            object-fit: contain;
+        }
+        #loading { display: none; color: #8b0000; font-weight: bold; margin-bottom: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>✨ 天空紫微 ✨</h1>
+    </div>
+
+    <div class="main-content">
+        <div id="instructions">
+            <div class="info-section">
+                <h2>📜 抽牌前準備步驟</h2>
+                <ol>
+                    <li><strong>清淨心神：</strong>深呼吸幾次，讓思緒平靜，排除雜念。</li>
+                    <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題。</li>
+                    <li><strong>抽牌：</strong>在專注狀態下，按感覺隨機點擊。</li>
+                </ol>
+            </div>
+            <div class="info-section">
+                <h2>⚠️ 抽牌禁忌與注意事項</h2>
+                <ul>
+                    <li><strong>一事不二問：</strong>同一件事短期內不要重複問。</li>
+                    <li><strong>不可問惡事：</strong>不能問關於不道德的事。</li>
+                    <li><strong>問近不問遠：</strong>盡量問三個月內的短期問題。</li>
+                    <li><strong>真心誠意：</strong>不可嬉鬧，誠懇面對。</li>
+                </ul>
+            </div>
+        </div>
+
+        <p id="loading">正在請示神明...</p>
+        <img id="result-image" src="">
+    </div>
+
+    <div class="btn-area">
+        <button id="drawBtn">誠心求籤</button>
+    </div>
+
+    <script>
+        // 🚨 已將副檔名統一改為大寫 .JPG
+        const imageList = [
+            "1.JPG", "2.JPG", "1複製.JPG", "2複製.JPG"
+            // 請依照此格式補齊剩下的 50 個檔名
+        ];
+
+        const drawBtn = document.getElementById('drawBtn');
+        const img = document.getElementById('result-image');
+        const loading = document.getElementById('loading');
+        const instructions = document.getElementById('instructions');
+
+        drawBtn.onclick = function() {
+            if (imageList.length === 0) return;
+
+            drawBtn.disabled = true;
+            loading.style.display = 'block';
+
+            const randomFile = imageList[Math.floor(Math.random() * imageList.length)];
+            const imagePath = "static/images/" + randomFile;
+            
+            // 使用 encodeURI 處理中文檔名
+            const encodedPath = encodeURI(imagePath);
+
+            const tempImg = new Image();
+            tempImg.src = encodedPath;
+
+            tempImg.onload = function() {
+                instructions.style.display = 'none';
+                loading.style.display = 'none';
+                img.src = encodedPath;
+                img.style.display = 'block';
+                drawBtn.disabled = false;
+                drawBtn.innerText = '再次求籤';
+            };
+
+            tempImg.onerror = function() {
+                alert("讀取失敗！請確認 GitHub 上是否有此檔案（副檔名必須是大寫 JPG）：\n" + imagePath);
+                loading.style.display = 'none';
+                drawBtn.disabled = false;
+            };
+        };
+    </script>
+</body>
+</html>
