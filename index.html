@@ -52,4 +52,134 @@
             background-color: #fff;
             border-left: 4px solid #8b0000;
             padding: 10px 15px;
-            margin-
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .info-section h2 { font-size: 16px; color: #8b0000; margin: 0 0 5px 0; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        .info-section ul, .info-section ol { padding-left: 20px; margin: 0; font-size: 14px; line-height: 1.5; color: #333; }
+        .info-section li { margin-bottom: 4px; }
+
+        /* 抽籤按鈕區 */
+        .btn-area { 
+            padding: 15px 0 25px 0; 
+            text-align: center; 
+            flex-shrink: 0;
+            width: 100%;
+        }
+        #drawBtn { 
+            font-size: 20px; 
+            padding: 12px 60px; 
+            background-color: #8b0000; 
+            color: #ffd700; 
+            border: 2px solid #ffd700; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        #drawBtn:active { transform: scale(0.95); }
+        #drawBtn:disabled { background-color: #666; border-color: #999; color: #ccc; }
+
+        /* 圖片顯示效果 */
+        #result-image { 
+            max-width: 100%; 
+            max-height: 75vh; 
+            display: none; 
+            border: 4px solid #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            object-fit: contain;
+        }
+        #loading { display: none; color: #8b0000; font-weight: bold; margin-bottom: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>✨ 天空紫微 ✨</h1>
+    </div>
+
+    <div class="main-content">
+        <div id="instructions">
+            <div class="info-section">
+                <h2>📜 抽牌前準備步驟</h2>
+                <ol>
+                    <li><strong>清淨心神 (靜心/冥想)：</strong>深呼吸幾次，讓思緒平靜，排除雜念，進入專注狀態。</li>
+                    <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題，例如「我這個月在工作上如何能更順利？」。</li>
+                    <li><strong>抽牌：</strong>在專注狀態下，按感覺隨機點擊。</li>
+                </ol>
+            </div>
+            <div class="info-section">
+                <h2>⚠️ 抽牌禁忌與注意事項</h2>
+                <ul>
+                    <li><strong>環境清淨：</strong>避免在吵雜、干擾多的環境抽牌。</li>
+                    <li><strong>一事不二問：</strong>同一件事短期內不要重複問。</li>
+                    <li><strong>不可問惡事：</strong>不能問關於作惡或不道德的事。</li>
+                    <li><strong>問近不問遠：</strong>盡量問三個月內的短期問題。</li>
+                    <li><strong>真心誠意：</strong>不可嬉鬧，要以尊重和誠懇的態度面對。</li>
+                </ul>
+            </div>
+        </div>
+
+        <p id="loading">正在請示神明...</p>
+        <img id="result-image" src="" alt="籤詩結果">
+    </div>
+
+    <div class="btn-area">
+        <button id="drawBtn">誠心求籤</button>
+    </div>
+
+    <script>
+        // 🚨 這裡請填入您所有真實的檔名 (包含中文字檔名)
+        const imageList = [
+            "1.jpg", 
+            "2.jpg", 
+            "1複製.jpg", 
+            "2複製.jpg"
+            // 請手動補齊剩下的檔名...
+        ];
+
+        document.getElementById('drawBtn').onclick = function() {
+            const btn = this;
+            const img = document.getElementById('result-image');
+            const loading = document.getElementById('loading');
+            const instructions = document.getElementById('instructions');
+            
+            if (imageList.length === 0) {
+                alert("請先在程式碼中填入圖片檔名清單！");
+                return;
+            }
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+
+            // 隨機選取檔名並進行網址編碼處理 (解決中文檔名問題)
+            const randomFile = imageList[Math.floor(Math.random() * imageList.length)];
+            const imagePath = "static/images/" + randomFile;
+            const encodedPath = encodeURI(imagePath);
+
+            const tempImg = new Image();
+            tempImg.src = encodedPath;
+
+            tempImg.onload = function() {
+                // 圖片載入成功後才切換畫面
+                instructions.style.display = 'none';
+                loading.style.display = 'none';
+                img.src = encodedPath;
+                img.style.display = 'block';
+                btn.disabled = false;
+                btn.innerText = '再次求籤';
+            };
+
+            tempImg.onerror = function() {
+                alert("讀取失敗！請確認 GitHub 資料夾內是否有此檔案（注意大小寫）：\n" + imagePath);
+                loading.style.display = 'none';
+                btn.disabled = false;
+            };
+        };
+    </script>
+</body>
+</html>
