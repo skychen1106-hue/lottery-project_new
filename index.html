@@ -32,3 +32,81 @@
 
     <div class="header">
         <h1>✨ 天空紫微 ✨</h1>
+    </div>
+
+    <div class="main-content">
+        <div id="instructions">
+            <div class="info-section">
+                <h2>📜 抽牌前準備步驟</h2>
+                <ol>
+                    <li><strong>清淨心神 (靜心/冥想)：</strong>這是最關鍵的一步，深呼吸幾次，讓思緒平靜，排除雜念，進入專注狀態。</li>
+                    <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題，例如「我這個月在工作上如何能更順利？」，而不是模糊的「我事業如何？」。</li>
+                    <li><strong>抽牌：</strong>在專注於問題的狀態下，按照感覺隨機抽出牌卡。</li>
+                </ol>
+            </div>
+            <div class="info-section">
+                <h2>⚠️ 抽牌禁忌與注意事項</h2>
+                <ul>
+                    <li><strong>環境清淨：</strong>避免在吵雜、干擾多的環境抽牌。</li>
+                    <li><strong>一事不二問：</strong>同一件事短期內不要重複問。</li>
+                    <li><strong>不可問惡事：</strong>不能問關於作惡或不道德的事。</li>
+                    <li><strong>問近不問遠：</strong>盡量問三個月內的短期問題，長遠問題對新手較難推算。</li>
+                    <li><strong>真心誠意：</strong>不可嬉鬧，要以尊重和誠懇的態度面對牌卡。</li>
+                </ul>
+            </div>
+        </div>
+
+        <p id="loading">正在請示神明...</p>
+        <img id="result-image" src="">
+    </div>
+
+    <div class="btn-area">
+        <button id="drawBtn">誠心求籤</button>
+    </div>
+
+    <script>
+        const drawBtn = document.getElementById('drawBtn');
+        const img = document.getElementById('result-image');
+        const loading = document.getElementById('loading');
+        const instructions = document.getElementById('instructions');
+
+        // 🚨 重要：請在此處填入您所有的圖片檔名（包含 1.jpg 和 1複製.jpg）
+        const imageList = [
+            "1.jpg", "1複製.jpg", "2.jpg", "2複製.jpg", "3.jpg", "3複製.jpg"
+            // 請手動補齊剩下的檔名...
+        ];
+
+        drawBtn.onclick = function() {
+            if (imageList.length === 0) {
+                alert("請先在程式碼中填入圖片檔名清單！");
+                return;
+            }
+            
+            drawBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            const randomIndex = Math.floor(Math.random() * imageList.length);
+            const fileName = imageList[randomIndex];
+            const imagePath = "static/images/" + fileName;
+
+            const tempImg = new Image();
+            tempImg.src = imagePath;
+
+            tempImg.onload = function() {
+                instructions.style.display = 'none'; // 抽完籤隱藏說明
+                loading.style.display = 'none';
+                img.src = imagePath;
+                img.style.display = 'block'; // 顯示圖片
+                drawBtn.disabled = false;
+                drawBtn.innerText = '再次求籤';
+            };
+
+            tempImg.onerror = function() {
+                alert("讀取失敗，請檢查檔名大小寫或路徑：" + imagePath);
+                loading.style.display = 'none';
+                drawBtn.disabled = false;
+            };
+        };
+    </script>
+</body>
+</html>
