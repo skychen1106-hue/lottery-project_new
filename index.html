@@ -72,4 +72,119 @@
             font-size: 20px; 
             padding: 12px 60px; 
             background-color: #8b0000; 
-            color: #ffd700;
+            color: #ffd700; 
+            border: 2px solid #ffd700; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        #drawBtn:active { transform: scale(0.95); }
+        #drawBtn:disabled { background-color: #666; border-color: #999; color: #ccc; }
+
+        /* 圖片顯示 */
+        #result-image { 
+            max-width: 100%; 
+            max-height: 75vh; 
+            display: none; 
+            border: 4px solid #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            object-fit: contain;
+        }
+        #loading { display: none; color: #8b0000; font-weight: bold; margin-bottom: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>✨ 天空紫微 ✨</h1>
+    </div>
+
+    <div class="main-content">
+        <div id="instructions">
+            <div class="info-section">
+                <h2>📜 抽牌前準備步驟</h2>
+                <ol>
+                    <li><strong>清淨心神 (靜心/冥想)：</strong>深呼吸幾次，讓思緒平靜，排除雜念。</li>
+                    <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題。</li>
+                    <li><strong>抽牌：</strong>在專注狀態下，按感覺隨機點擊。</li>
+                </ol>
+            </div>
+            <div class="info-section">
+                <h2>⚠️ 抽牌禁忌與注意事項</h2>
+                <ul>
+                    <li><strong>環境清淨：</strong>避免在吵雜環境抽牌。</li>
+                    <li><strong>一事不二問：</strong>同一件事短期內不要重複問。</li>
+                    <li><strong>不可問惡事：</strong>不能問關於不道德的事。</li>
+                    <li><strong>問近不問遠：</strong>盡量問三個月內的短期問題。</li>
+                    <li><strong>真心誠意：</strong>不可嬉鬧，誠懇面對。</li>
+                </ul>
+            </div>
+        </div>
+
+        <p id="loading">正在請示神明...</p>
+        <img id="result-image" src="" alt="籤詩結果">
+    </div>
+
+    <div class="btn-area">
+        <button id="drawBtn">誠心求籤</button>
+    </div>
+
+    <script>
+        /**
+         * 🚨 重要提示：
+         * 1. 請確保以下清單中的檔名與 GitHub 上 static/images/ 資料夾內的檔案完全一致（包含大小寫）。
+         * 2. 建議避開中文字檔名，改用純數字如 "3.JPG"。
+         */
+        const imageList = [
+            "1.JPG", 
+            "2.JPG", 
+            "3.JPG" 
+            // ...請依照此格式手動補齊剩下的檔名
+        ];
+
+        const drawBtn = document.getElementById('drawBtn');
+        const img = document.getElementById('result-image');
+        const loading = document.getElementById('loading');
+        const instructions = document.getElementById('instructions');
+
+        drawBtn.onclick = function() {
+            if (imageList.length === 0) {
+                alert("請先在程式碼中填入圖片檔名清單！");
+                return;
+            }
+
+            drawBtn.disabled = true;
+            loading.style.display = 'block';
+
+            // 隨機選取檔名
+            const randomFile = imageList[Math.floor(Math.random() * imageList.length)];
+            
+            // 組合路徑並加上時間戳記 (?t=...) 解決 GitHub 快取問題
+            const imagePath = "static/images/" + randomFile + "?t=" + new Date().getTime();
+            const encodedPath = encodeURI(imagePath);
+
+            const tempImg = new Image();
+            tempImg.src = encodedPath;
+
+            tempImg.onload = function() {
+                // 成功載入後：隱藏說明、顯示圖片
+                instructions.style.display = 'none';
+                loading.style.display = 'none';
+                img.src = encodedPath;
+                img.style.display = 'block';
+                drawBtn.disabled = false;
+                drawBtn.innerText = '再次求籤';
+            };
+
+            tempImg.onerror = function() {
+                alert("讀取失敗！請確認 GitHub 上的檔案路徑與大小寫：\n" + decodeURI(encodedPath));
+                loading.style.display = 'none';
+                drawBtn.disabled = false;
+            };
+        };
+    </script>
+</body>
+</html>
