@@ -53,13 +53,12 @@
     <div class="btn-area"><button id="drawBtn">誠心求籤</button></div>
 
     <script>
-        // 設定圖片總數 (目前設定 1-50)
-        const totalImages = 50; 
+        // 設定要抽取的範圍 (1 到 50)
+        const totalNum = 50; 
         const baseNames = [];
-        
-        for (let i = 1; i <= totalImages; i++) {
-            baseNames.push(i.toString());      // 加入 "1"
-            baseNames.push(i.toString() + "A"); // 加入 "1A"
+        for (let i = 1; i <= totalNum; i++) {
+            baseNames.push(i.toString());      // 例如 "1"
+            baseNames.push(i.toString() + "A"); // 例如 "1A"
         }
 
         const drawBtn = document.getElementById('drawBtn');
@@ -71,16 +70,17 @@
             drawBtn.disabled = true;
             loading.style.display = 'block';
 
-            // 隨機抽選清單中的一個名稱 (可能是 1 或 1A)
+            // 隨機抽選一個檔名基底
             const randomBase = baseNames[Math.floor(Math.random() * baseNames.length)];
             
-            // 自動嘗試大寫 .JPG 與小寫 .jpg
-            tryLoadImage(randomBase, ["JPG", "jpg"]); 
+            // 嘗試所有可能的副檔名組合 (大寫小寫都試)
+            tryLoadImage(randomBase, ["JPG", "jpg", "PNG", "png"]); 
         };
 
         function tryLoadImage(name, extensions) {
             if (extensions.length === 0) {
-                alert("讀取失敗！請檢查 GitHub 的 static/images/ 中是否有 " + name + ".JPG 或 .jpg");
+                // 如果所有副檔名都試過還是失敗，才報錯
+                alert("讀取失敗！請檢查 GitHub 的 static/images/ 中是否有檔案：" + name);
                 loading.style.display = 'none';
                 drawBtn.disabled = false;
                 return;
@@ -88,7 +88,7 @@
 
             const ext = extensions[0];
             const path = "static/images/" + name + "." + ext;
-            // 加入時間戳記避免讀取舊緩存
+            // 加入時間戳記避免緩存
             const finalUrl = encodeURI(path) + "?t=" + new Date().getTime();
 
             const tempImg = new Image();
@@ -104,7 +104,7 @@
             };
 
             tempImg.onerror = function() {
-                // 如果目前的副檔名（JPG）失敗，嘗試下一個（jpg）
+                // 如果目前的副檔名失敗，自動換下一個試試看
                 tryLoadImage(name, extensions.slice(1));
             };
         }
