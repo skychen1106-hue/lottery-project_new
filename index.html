@@ -5,145 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>天空紫微 x 線上求籤</title>
     <style>
-        /* 強制滿版排版，禁止上下捲動 */
-        html, body { 
-            height: 100%; 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden; 
-            background-color: #fdf5e6; 
-            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* 標題區：高度縮小並置中 */
-        .header { 
-            background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
-            color: #ffd700; 
-            padding: 12px 0; 
-            text-align: center; 
-            flex-shrink: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            width: 100%;
-        }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #fdf5e6; font-family: "Microsoft JhengHei", sans-serif; display: flex; flex-direction: column; }
+        .header { background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%); color: #ffd700; padding: 12px 0; text-align: center; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 100%; }
         h1 { margin: 0; font-size: 20px; letter-spacing: 2px; }
-
-        /* 主要內容區：自動撐開並置中 */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            box-sizing: border-box;
-            width: 100%;
-            overflow-y: auto; /* 僅在說明文字過長時允許微調 */
-        }
-
-        /* 說明文字區塊 */
-        #instructions {
-            width: 100%;
-            max-width: 450px;
-            display: block;
-        }
-        .info-section {
-            background-color: #fff;
-            border-left: 4px solid #8b0000;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: left;
-        }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; width: 100%; box-sizing: border-box; overflow-y: auto; }
+        #instructions { width: 100%; max-width: 450px; display: block; }
+        .info-section { background-color: #fff; border-left: 4px solid #8b0000; padding: 10px 15px; margin-bottom: 10px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: left; }
         .info-section h2 { font-size: 16px; color: #8b0000; margin: 0 0 5px 0; border-bottom: 1px solid #eee; padding-bottom: 3px; }
         .info-section ul, .info-section ol { padding-left: 20px; margin: 0; font-size: 14px; line-height: 1.5; color: #333; }
         .info-section li { margin-bottom: 4px; }
-
-        /* 按鈕區：固定在底部置中 */
-        .btn-area { 
-            padding: 15px 0 25px 0; 
-            text-align: center; 
-            flex-shrink: 0;
-            width: 100%;
-        }
-        #drawBtn { 
-            font-size: 20px; 
-            padding: 12px 60px; 
-            background-color: #8b0000; 
-            color: #ffd700; 
-            border: 2px solid #ffd700; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
-        }
-        #drawBtn:active { transform: scale(0.95); }
-        #drawBtn:disabled { background-color: #666; border-color: #999; color: #ccc; }
-
-        /* 圖片顯示 */
-        #result-image { 
-            max-width: 100%; 
-            max-height: 75vh; 
-            display: none; 
-            border: 4px solid #fff; 
-            border-radius: 8px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            object-fit: contain;
-        }
+        .btn-area { padding: 15px 0 25px 0; text-align: center; flex-shrink: 0; width: 100%; }
+        #drawBtn { font-size: 20px; padding: 12px 60px; background-color: #8b0000; color: #ffd700; border: 2px solid #ffd700; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #result-image { max-width: 100%; max-height: 75vh; display: none; border: 4px solid #fff; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); object-fit: contain; }
         #loading { display: none; color: #8b0000; font-weight: bold; margin-bottom: 10px; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>✨ 天空紫微 ✨</h1>
-    </div>
+    <div class="header"><h1>✨ 天空紫微 ✨</h1></div>
 
     <div class="main-content">
         <div id="instructions">
             <div class="info-section">
                 <h2>📜 抽牌前準備步驟</h2>
                 <ol>
-                    <li><strong>清淨心神 (靜心/冥想)：</strong>深呼吸幾次，讓思緒平靜，排除雜念。</li>
+                    <li><strong>清淨心神：</strong>深呼吸幾次，讓思緒平靜，排除雜念。</li>
                     <li><strong>聚焦問題：</strong>清晰、具體地思考你想問的問題。</li>
-                    <li><strong>抽牌：</strong>在專注狀態下，按感覺隨機點擊。</li>
+                    <li><strong>抽牌：</strong>在專注狀態下，隨機點擊按鈕。</li>
                 </ol>
             </div>
             <div class="info-section">
                 <h2>⚠️ 抽牌禁忌與注意事項</h2>
                 <ul>
-                    <li><strong>環境清淨：</strong>避免在吵雜環境抽牌。</li>
-                    <li><strong>一事不二問：</strong>同一件事短期內不要重複問。</li>
-                    <li><strong>不可問惡事：</strong>不能問關於不道德的事。</li>
-                    <li><strong>問近不問遠：</strong>盡量問三個月內的短期問題。</li>
-                    <li><strong>真心誠意：</strong>不可嬉鬧，誠懇面對。</li>
+                    <li>一事不二問、不可問惡事、問近不問遠、真心誠意。</li>
                 </ul>
             </div>
         </div>
-
         <p id="loading">正在請示神明...</p>
-        <img id="result-image" src="" alt="籤詩結果">
+        <img id="result-image" src="">
     </div>
 
-    <div class="btn-area">
-        <button id="drawBtn">誠心求籤</button>
-    </div>
+    <div class="btn-area"><button id="drawBtn">誠心求籤</button></div>
 
     <script>
-        /**
-         * 🚨 重要提示：
-         * 1. 請確保以下清單中的檔名與 GitHub 上 static/images/ 資料夾內的檔案完全一致（包含大小寫）。
-         * 2. 建議避開中文字檔名，改用純數字如 "3.JPG"。
-         */
-        const imageList = [
-            "1.JPG", 
-            "2.JPG", 
-            "3.JPG" 
-            // ...請依照此格式手動補齊剩下的檔名
-        ];
+        // --- 智慧檔名清單生成 ---
+        const imageList = [];
+        
+        // 1. 自動加入 1.JPG 到 50.JPG
+        for (let i = 1; i <= 50; i++) {
+            imageList.push(i + ".JPG");
+        }
+
+        // 2. 手動加入您提到的特殊檔名 (確保這兩個檔案在 GitHub 上確實存在)
+        imageList.push("1複製.JPG");
+        imageList.push("2複製.JPG");
 
         const drawBtn = document.getElementById('drawBtn');
         const img = document.getElementById('result-image');
@@ -151,36 +66,30 @@
         const instructions = document.getElementById('instructions');
 
         drawBtn.onclick = function() {
-            if (imageList.length === 0) {
-                alert("請先在程式碼中填入圖片檔名清單！");
-                return;
-            }
-
             drawBtn.disabled = true;
             loading.style.display = 'block';
 
-            // 隨機選取檔名
+            // 隨機抽選
             const randomFile = imageList[Math.floor(Math.random() * imageList.length)];
             
-            // 組合路徑並加上時間戳記 (?t=...) 解決 GitHub 快取問題
-            const imagePath = "static/images/" + randomFile + "?t=" + new Date().getTime();
-            const encodedPath = encodeURI(imagePath);
+            // 組合路徑 + 編碼 + 防止快取的時間戳記
+            const imagePath = "static/images/" + randomFile;
+            const finalUrl = encodeURI(imagePath) + "?t=" + new Date().getTime();
 
             const tempImg = new Image();
-            tempImg.src = encodedPath;
+            tempImg.src = finalUrl;
 
             tempImg.onload = function() {
-                // 成功載入後：隱藏說明、顯示圖片
                 instructions.style.display = 'none';
                 loading.style.display = 'none';
-                img.src = encodedPath;
+                img.src = finalUrl;
                 img.style.display = 'block';
                 drawBtn.disabled = false;
                 drawBtn.innerText = '再次求籤';
             };
 
             tempImg.onerror = function() {
-                alert("讀取失敗！請確認 GitHub 上的檔案路徑與大小寫：\n" + decodeURI(encodedPath));
+                alert("抽到一張讀取失敗的圖：" + randomFile + "\n請確認該檔案是否存在於 static/images/ 且副檔名為大寫 .JPG");
                 loading.style.display = 'none';
                 drawBtn.disabled = false;
             };
